@@ -76,10 +76,12 @@ public class Exemplo{
         { x++; }
     }
     public static void M2(){
-        try { synchronized (Class.forName( “Exemplo”) )
+        try { synchronized (Class.forName("Exemplo") )
         { s++; }
         }
-        catch (classNotFoundException e) {...}
+        catch (classNotFoundException e) {
+            System.out.println("Error:" + e.getMessage());
+        }
     }
 }
 ```
@@ -175,5 +177,215 @@ public class Connection extends Thread{
 }
 ```
 
+## Controlo entre Threads
+A transferência de controlo entre threads é feita através de **notificações** e **esperas**. Uma thread pode esperar por uma notificação de outra thread, e quando essa notificação é recebida, a thread que a enviou pode continuar a sua execução.
 
+Métodos da classe **Object**:
+ - **wait()**: Coloca a thread em estado de espera (suspende-se a si própria).
+ - **notify()**: Notifica uma thread que está em estado de espera.
+ - **notifyAll()**: Notifica todas as threads que estão em estado de espera.
 
+Nota: Só podem ser executados por uma thread que tenha o lock associado ao objeto (isto é, dentro do bloco **synchronized**).
+
+### Wait (Espera)
+O método **wait()** coloca a thread no estado **não executável** até que uma destas condições se verifique:
+ - A thread é notificada por outra thread;
+ - A thread é interrompida por outra thread;
+ - O tempo limite de espera expira (caso adicionado);
+
+Após isso, a thread é removida do estado de espera e coloca-se no estado de **execução** e volta ao ponto imediatamente anterior à chamada do método *wait()*.
+
+### Notify/NotifyAll (Notificação)
+O método **notify()** notifica uma thread que está em estado de espera. Caso o *wait set* não esteja vazio, é escolhida **uma thread** para ser removida do *wait set* e colocada no *entry set*. Caso contrário, não acontece nada.
+
+O método **notifyAll()** notifica todas as threads que estão em estado de espera. Caso o *wait set* não esteja vazio, **todas as threads** são removidas do *wait set* e colocadas no *entry set*. Caso contrário, não acontece nada.
+
+Nota: o processo que executa o notify, não é suspenso (se possível, o notify deve ser a última instrução do método)
+
+Exemplo de uma aplicação para **gerir o dinheiro numa caixa de um clube recreativo**.
+```java
+// Utilizador
+public class Utilizador extends Thread {
+    private final ContaBancaria conta;
+    private final long intervalo;
+
+    public Utilizador(ContaBancaria conta, long intervalo) {
+        this.conta = conta;
+        this.intervalo = intervalo;
+        start();
+    }
+
+    public void run() {
+        while (true) {
+            double valor = Math.random() * 50;
+            try {
+                conta.levantamento(valor);
+                System.out.println("Utilizador " + Thread.currentThread().getId() + " levantou " + valor + " euros");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(intervalo);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+```
+```java
+// ContaBancaria
+public class ContaBancaria{
+    private double saldo;
+
+    public ContaBancaria(double saldo) {
+        this.saldo = saldo;
+    }
+
+    public double verSaldo() {
+        return saldo;
+    }
+
+    public boolean semSaldo() {
+        return saldo <= 0;
+    }
+
+    public synchronized void deposito(double valor) {
+        saldo += valor;
+        notifyAll();
+    }
+
+    public synchronized void levantamento(double valor) throws InterruptedException {
+        while (semSaldo()){
+            wait();
+        }
+        saldo -= valor;
+    }
+
+    public String toString() {
+        return "Saldo: " + saldo;
+    }
+}
+```
+```java
+// Main
+public class Main {
+    // Para testar as classes anteriores construa uma classe teste em que um objeto do tipo
+    // ContaBancaria seja partilhado concorrentemente por um objeto do tipo Financiador e
+    // por pelo menos 3 objetos do tipo Utilizador.
+    public static void main(String[] args) {
+        ContaBancaria conta = new ContaBancaria(1000);
+        Financiador financiador = new Financiador(conta, 5000);
+        Utilizador utilizador1 = new Utilizador(conta, 1000);
+        Utilizador utilizador2 = new Utilizador(conta, 1500);
+        Utilizador utilizador3 = new Utilizador(conta, 2000);
+    }
+}
+```
+
+Exemplo do **"Readers-Writers Problem"**:
+```java
+// Livro
+public class Livro {
+    private int XPTO;
+    private int numeroLeitores;
+
+    public Livro(int XPTO) {
+        this.XPTO = XPTO;
+    }
+    
+    public synchronized int ler(){
+        return XPTO;
+    }
+
+    public void comecarLeitura(){
+        numeroLeitores++;
+    }
+
+    public void terminarLeitura(){
+        numeroLeitores--;
+        if(numeroLeitores == 0){
+            notifyAll();
+        }
+    }
+
+    public boolean temLeitores(){
+        return numeroLeitores > 0;
+    }
+
+    public void escrever() throws InterruptedException{
+        while(tempLeitores()){
+            wait();
+        }
+        XPTO += 100;
+        XPTO -= 100;
+        notifyAll();
+    }
+}
+```
+```java
+// Leitor
+public class Leitor extends Thread {
+    private Livro livro;
+    private static final int TEMPO_ESPERA = 1000;
+    public Leitor(Livro livro) {
+        super();
+        this.livro = livro;
+        start();
+    }
+
+    public void run(){
+        while(true){
+            livro.comecarLeitura();
+            System.out.println("Leitor " + Thread.currentThread().getId() + " leu " + livro.ler());
+            livro.terminarLeitura();
+            try {
+                Thread.sleep(TEMPO_ESPERA);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+```
+```java
+// Escritor
+public class Escritor extends Thread{
+    private Livro livro;
+    private static final int TEMPO_ESPERA = 1000;
+    public Escritor(Livro livro) {
+        super();
+        this.livro = livro;
+        start();
+    }
+
+    public void run(){
+        while(true){
+            try{
+                livro.escrever();
+                System.out.println("Escritor " + Thread.currentThread().getId() + " escreveu");
+            }catch(InterruptedException e){
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(TEMPO_ESPERA);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+```
+```java
+// Main
+public class Main{
+    public static void main(String[] args){
+        Livro livro = new Livro(0);
+        Leitor leitor1 = new Leitor(livro);
+        Leitor leitor2 = new Leitor(livro);
+        Leitor leitor3 = new Leitor(livro);
+        Escritor escritor1 = new Escritor(livro);
+        Escritor escritor2 = new Escritor(livro);
+    }
+}
+```
