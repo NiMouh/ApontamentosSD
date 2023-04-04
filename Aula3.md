@@ -88,7 +88,7 @@ public class Exemplo{
 
 Nota: O método sincronizado se for estático, partilha o lock com todos os objetos da classe. Caso contrário, cada objeto tem o seu próprio lock.
 
-#### Exercicio de Exclusão Mútua
+#### Exercício de Exclusão Mútua
 Supondo que tenho a seguinte classe:
 ```java
 public class Contador{
@@ -106,11 +106,15 @@ public class Contador{
 ```
 
 Dado dois objetos (Contador c1,c2) e duas threads (Thead t1,t2), quais são os casos de exclusão mútua? Justifique.
-|     | t1    | t2    | Justificação |
-| Não | c1.m1 | c2.m1 | Não existe exclusão mútua, pois cada thread tem o seu próprio lock. |
+
+|     | t1    | t2    | Justificação                                                                    |
+|-----|-------|-------|---------------------------------------------------------------------------------|
+| Não | c1.m1 | c2.m1 | Não existe exclusão mútua, pois cada thread tem o seu próprio lock.             |
 | Sim | c1.m2 | c2.m2 | Existe exclusão mútua, pois o lock é partilhado por todos os objetos da classe. |
-| Não | c1.m3 | c2.m3 | Não existe exclusão mútua, pois cada thread tem o seu próprio lock. |
-| Sim | c1.m1 | c1.m1 | Existe exclusão mútua, pois o lock é partilhado por o próprio objeto |
+| Não | c1.m3 | c2.m3 | Não existe exclusão mútua, pois cada thread tem o seu próprio lock.             |
+| Sim | c1.m1 | c1.m1 | Existe exclusão mútua, pois o lock é partilhado por o próprio objeto            |
+
+
 ## Servidores Multithreading
 Um servidor multithreading é um servidor que pode processar **várias** solicitações ao mesmo tempo. Para isso, o servidor cria uma thread para cada **solicitação** que recebe.
 
@@ -295,9 +299,6 @@ public class ContaBancaria{
 ```java
 // Main
 public class Main {
-    // Para testar as classes anteriores construa uma classe teste em que um objeto do tipo
-    // ContaBancaria seja partilhado concorrentemente por um objeto do tipo Financiador e
-    // por pelo menos 3 objetos do tipo Utilizador.
     public static void main(String[] args) {
         ContaBancaria conta = new ContaBancaria(1000);
         Financiador financiador = new Financiador(conta, 5000);
