@@ -86,6 +86,31 @@ public class Exemplo{
 }
 ```
 
+Nota: O método sincronizado se for estático, partilha o lock com todos os objetos da classe. Caso contrário, cada objeto tem o seu próprio lock.
+
+#### Exercicio de Exclusão Mútua
+Supondo que tenho a seguinte classe:
+```java
+public class Contador{
+    private int valor;
+    public Contador(){
+        valor = 0;
+    }
+
+    public synchronized int m1(){...}
+
+    public static synchronized int m2(){...}
+
+    public int m3(){...}
+}
+```
+
+Dado dois objetos (Contador c1,c2) e duas threads (Thead t1,t2), quais são os casos de exclusão mútua? Justifique.
+|     | t1    | t2    | Justificação |
+| Não | c1.m1 | c2.m1 | Não existe exclusão mútua, pois cada thread tem o seu próprio lock. |
+| Sim | c1.m2 | c2.m2 | Existe exclusão mútua, pois o lock é partilhado por todos os objetos da classe. |
+| Não | c1.m3 | c2.m3 | Não existe exclusão mútua, pois cada thread tem o seu próprio lock. |
+| Sim | c1.m1 | c1.m1 | Existe exclusão mútua, pois o lock é partilhado por o próprio objeto |
 ## Servidores Multithreading
 Um servidor multithreading é um servidor que pode processar **várias** solicitações ao mesmo tempo. Para isso, o servidor cria uma thread para cada **solicitação** que recebe.
 
