@@ -108,7 +108,7 @@ public class Contador{
 Dado dois objetos (Contador c1,c2) e duas threads (Thead t1,t2), quais são os casos de exclusão mútua? Justifique.
 
 |     | t1    | t2    | Justificação                                                                    |
-|-----|-------|-------|---------------------------------------------------------------------------------|
+| --- | ----- | ----- | ------------------------------------------------------------------------------- |
 | Não | c1.m1 | c2.m1 | Não existe exclusão mútua, pois cada thread tem o seu próprio lock.             |
 | Sim | c1.m2 | c2.m2 | Existe exclusão mútua, pois o lock é partilhado por todos os objetos da classe. |
 | Não | c1.m3 | c2.m3 | Não existe exclusão mútua, pois cada thread tem o seu próprio lock.             |
