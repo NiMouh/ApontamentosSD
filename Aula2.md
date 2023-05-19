@@ -85,13 +85,13 @@ public class Servidor {
         try {
             ServerSocket server = new ServerSocket(2000);
             while(true){ // Ciclo que aceita outros clientes
-                Socket soc = server.accept();
-                ObjectInputStream entrada = new ObjectInputStream(soc.getInputStream());
-                ObjectOutputStream saida = new ObjectOutputStream(soc.getOutputStream());
+                Socket socket = server.accept();
+                ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
+                ObjectOutputStream saida = new ObjectOutputStream(socket.getOutputStream());
                 System.out.println("Ligaçao estabelecida com o cliente");
                 while (true){ // Ciclo da conversa com o cliente
-                    String msg = (String) entrada.readObject();
-                    System.out.println("Mensagem recebida: " + msg);
+                    String mensagem = (String) entrada.readObject();
+                    System.out.println("Mensagem recebida: " + mensagem);
                     String mensagem = Ler.umaString();
                     saida.writeObject(mensagem);
                     saida.flush();
@@ -118,21 +118,21 @@ public class Cliente {
 
     public static void main(String[] args) {
         try {
-            Socket soc = new Socket("localhost", 2000);
-            ObjectOutputStream saida = new ObjectOutputStream(soc.getOutputStream());
-            ObjectInputStream entrada = new ObjectInputStream(soc.getInputStream());
+            Socket socket = new Socket("localhost", 2000);
+            ObjectOutputStream saida = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
             while (true) { // Ciclo da conversa com o servidor
                 String mensagem = Ler.umaString();
                 saida.writeObject(mensagem);
                 saida.flush();
-                String msg = (String) entrada.readObject();
-                if (msg.equals("sair"))
+                String mensagem = (String) entrada.readObject();
+                if (mensagem.equals("sair"))
                     break;
                 System.out.println("Mensagem recebida: " + msg);
             }
             saida.close();
             entrada.close();
-            soc.close();
+            socket.close();
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
         }
