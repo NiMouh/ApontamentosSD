@@ -65,10 +65,10 @@ onde a configuração do sistema é conhecida à partida.
 
 ## Modelos de interação por mensagens
 Estes são alguns dos modelos de interação por mensagens mais importantes:
-- **Comunicação ponto-a-ponto**: Cada processo envia mensagens para um único receptor. O processo que envia a mensagem tem de conhecer o endereço do receptor. A comunicação pode ser síncrona ou assíncrona;
+- **Comunicação ponto-a-ponto**: Cada processo envia mensagens para um único receptor. O processo que envia a mensagem tem de conhecer o endereço do receptor (e vice-versa). A comunicação pode ser síncrona ou assíncrona;
 - **Pub/Sub**: O publisher que permite aos outros processos subscreverem um determinado tópico ou evento. O publisher envia mensagens para todos os processos que subscreveram o tópico ou evento. A comunicação é assíncrona. Neste modelo tem 2 tipos de mensagens:
- - **Mensagens de notificação (Push)**: São enviadas quando um evento ocorre;
- - **Mensagens de pedido (Pull)**: São enviadas quando um processo quer obter informação sobre um evento;
+  - **Mensagens de notificação (Push)**: São enviadas quando um evento ocorre;
+  - **Mensagens de pedido (Pull)**: São enviadas quando um processo quer obter informação sobre um evento;
 - **Request/Reply**: Inclui todos os modelos para os quais para cada mensagem enviada a
 um processo existe uma resposta.
 
