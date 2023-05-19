@@ -1,7 +1,7 @@
 # Aula 3
 
 ## Threads
-É um sequência de execução dentro de um processo. Cada thread tem seu próprio conjunto de registradores e espaço na pilha. Threads compartilham o **mesmo espaço** de **endereçamento** e **recursos** do processo (pai).
+É uma sequência de execução num processo. Um processo pode ter uma ou várias threads, e cada uma delas representa uma linha de execução independente no processo. Threads compartilham o **mesmo espaço** de **endereçamento** e **recursos** do processo (pai).
 
 A execução deste processo é uma sequência de execuções pertencente ao conjunto das combinações possíveis de execução das threads. Logo, **não é possível** prever qual thread será executada em um dado momento.
 
