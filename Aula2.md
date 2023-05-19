@@ -26,8 +26,8 @@ Neste modelo os processos **partilham** uma região de memória. O acesso a esta
 Neste caso, cada processo tem a sua **própria memória**. A comunicação entre processos é feita através de mensagens (atráves de um canal de comunicação).
 
 Esta comunicação pode ser:
- - **Síncrona**: O processo que envia a mensagem, e esse canal fica bloqueado até que a mensagem seja recebida;
- - **Assíncrona**: O processo que envia a mensagem, e o canal não fica bloqueado até que a mensagem seja recebida;
+ - **Síncrona**: O remetente envia uma mensagem e espera pela resposta antes de continuar.
+ - **Assíncrona**: O remetente envia uma mensagem e continua sua execução sem esperar pela resposta imediata.
 
 Nota: Comunicação síncrona é um conceito de **baixo nível** (maior efiência). Comunicação assíncrona permite um maior grau de **concorrência**, porém exige que o sistema de execução faça a gestão e o armazenamento das mensagens
 
