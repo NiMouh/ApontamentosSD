@@ -14,7 +14,7 @@ em rede, com software que permite a partilha de recursos.
   - Não existe limite de tempo para a comunicação;
 - Falhas independentes:
   - Um processo pode falhar sem que os outros falhem;
-- Hererogeneidade:
+- Heterogeneidade:
   - Diferentes sistemas operativos;
   - Diferentes linguagens de programação;
   - Diferentes tipos de rede;
@@ -61,11 +61,11 @@ que consiste no cliente subscrever um tópico e o servidor enviar uma mensagem
 para todos os clientes que subscreveram esse tópico. A comunicação é assíncrona.
 
 ## 9. Explique a diferença entre a semântica at-most-once e at-least-once.
-A semântica at-most-once garante que a mensagem é entregue no máximo uma vez, ou seja
-o servidor deteta duplicados. A semântica at-least-once garante que a mensagem é entregue
+A semântica *at-most-once* garante que a mensagem é entregue no máximo uma vez, ou seja
+o servidor deteta duplicados. A semântica *at-least-once* garante que a mensagem é entregue
 pelo menos uma vez, mas pode ser entregue mais do que uma vez pois o servidor não deteta duplicados.
 A semântica de falhas at-most-once é usada pelo Java RMI. Complementando, a semântica de falhas
-maybe, não garante a entrega da mensagem, perante possíveis falhas, os pedidos não são reenviados.
+*maybe*, não garante a entrega da mensagem, perante possíveis falhas, os pedidos não são reenviados.
 
 ## 10. Compare os tipos de sincronização das três formas de comunicação por mensagens: sockets UDP, sockets TCP e RMI.
 - Sockets UDP:
